@@ -1,12 +1,4 @@
-﻿using CMHInterview.Repositories;
-using CMHInterview.Services;
-using CMHInterviews.Model;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System.Threading;
-
-namespace CMHInterviews.Test.Services
+﻿namespace CMHInterviews.Test.Services
 {
     public class InterviewServiceTests
     {

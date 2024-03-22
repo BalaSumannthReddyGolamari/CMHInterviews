@@ -1,9 +1,4 @@
-﻿using CMHInterviews.HttpClients;
-using CMHInterviews.Model;
-using System.Net;
-using System.Text.Json;
-
-namespace CMHInterview.Repositories
+﻿namespace CMHInterview.Repositories
 {
     public class InterviewRepository : IInterviewRepository
     {

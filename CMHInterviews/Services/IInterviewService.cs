@@ -1,6 +1,4 @@
-﻿using CMHInterviews.Model;
-
-namespace CMHInterview.Services
+﻿namespace CMHInterview.Services
 {
     public interface IInterviewService
     {

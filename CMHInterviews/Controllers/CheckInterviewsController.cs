@@ -1,8 +1,4 @@
-﻿using CMHInterview.Services;
-using CMHInterviews.Model;
-using Microsoft.AspNetCore.Mvc;
-
-namespace CMHInterviews.Controllers
+﻿namespace CMHInterviews.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

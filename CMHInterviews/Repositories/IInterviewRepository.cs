@@ -1,6 +1,4 @@
-﻿using CMHInterviews.Model;
-
-namespace CMHInterview.Repositories
+﻿namespace CMHInterview.Repositories
 {
     public interface IInterviewRepository
     {

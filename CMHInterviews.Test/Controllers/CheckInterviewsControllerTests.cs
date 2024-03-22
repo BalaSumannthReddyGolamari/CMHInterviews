@@ -1,11 +1,4 @@
-﻿using CMHInterview.Services;
-using CMHInterviews.Controllers;
-using CMHInterviews.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
-
-namespace CMHInterviews.Test.Controllers
+﻿namespace CMHInterviews.Test.Controllers
 {
     public class CheckInterviewsControllerTests
     {

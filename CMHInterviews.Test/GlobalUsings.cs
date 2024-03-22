@@ -1,1 +1,12 @@
 global using Xunit;
+global using CMHInterview.Repositories;
+global using CMHInterview.Services;
+global using CMHInterviews.Controllers;
+global using CMHInterviews.HttpClients;
+global using CMHInterviews.Model;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;
+global using Moq;
+global using System;
+global using System.Threading;

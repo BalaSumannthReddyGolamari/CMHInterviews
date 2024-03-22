@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace CMHInterviews.Model
+﻿namespace CMHInterviews.Model
 {
     public class Interview
     {

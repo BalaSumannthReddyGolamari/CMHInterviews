@@ -1,7 +1,4 @@
-﻿using CMHInterview.Repositories;
-using CMHInterviews.Model;
-
-namespace CMHInterview.Services
+﻿namespace CMHInterview.Services
 {
     public class InterviewService : IInterviewService
     {

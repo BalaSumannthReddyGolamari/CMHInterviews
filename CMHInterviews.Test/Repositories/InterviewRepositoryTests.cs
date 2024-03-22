@@ -1,16 +1,4 @@
-﻿using CMHInterview.Repositories;
-using CMHInterview.Services;
-using CMHInterviews.Controllers;
-using CMHInterviews.HttpClients;
-using CMHInterviews.Model;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System;
-using System.Threading;
-
-namespace CMHInterviews.Test.Controllers
+﻿namespace CMHInterviews.Test.Controllers
 {
     public class InterviewRepositoryTests
     {
