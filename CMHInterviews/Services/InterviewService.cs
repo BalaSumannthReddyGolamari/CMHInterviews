@@ -4,13 +4,11 @@
     {
         private readonly IInterviewRepository _repository;
         private readonly ILogger<InterviewService> _logger;
-        private readonly string _scheduledNumberOfDays;
 
-        public InterviewService(IInterviewRepository repository, ILogger<InterviewService> logger, IConfiguration configuration)
+        public InterviewService(IInterviewRepository repository, ILogger<InterviewService> logger)
         {
             _repository = repository;
             _logger = logger;
-            _scheduledNumberOfDays = configuration["ApiSettings:ScheduledNumberOfDays"];
         }
 
         public async Task<ScheduledInterviewCount> GetNumberOfInterviews(DateTime? date, CancellationToken cancellationToken)
@@ -19,27 +17,22 @@
             {
                 DateTime endDate = date ?? throw new ArgumentNullException(nameof(date), "Interview date is null.");
 
-                if (string.IsNullOrWhiteSpace(_scheduledNumberOfDays))
-                {
-                    throw new InvalidOperationException("ScheduledNumberOfDays is not configured.");
-                }
-                _logger.LogInformation($"Fetching interviews for the next {_scheduledNumberOfDays} days");
-
-                endDate = endDate.AddDays(int.Parse(_scheduledNumberOfDays));
+                _logger.LogInformation($"Fetching interviews for the next 14 days starting from {date}");
 
                 var interviews = await _repository.GetInterview(cancellationToken);
+
                 if (interviews == null || !interviews?.Any() == null)
                 {
                     _logger.LogInformation("No interviews found.");
                     return new ScheduledInterviewCount { NumberOfInterviews = 0 };
                 }
 
-                var interviewsForNext14Days = interviews?
-                    .Where(interview => interview?.DateOfInterview?.Date >= date?.Date && interview?.DateOfInterview?.Date <= endDate.Date);
+                var interviewsForGivenDate = interviews?
+                    .Where(interview => interview.DateOfInterview?.Date == date.Value.Date);
 
-                int numberOfInterviews = interviewsForNext14Days?.Count() ?? 0;
+                int numberOfInterviews = interviewsForGivenDate?.Count() ?? 0;
 
-                _logger.LogInformation("Number of interviews found: {Count}", numberOfInterviews);
+                _logger.LogInformation("Number of interviews found on the given date: {Count}", numberOfInterviews);
 
                 return new ScheduledInterviewCount { NumberOfInterviews = numberOfInterviews };
             }

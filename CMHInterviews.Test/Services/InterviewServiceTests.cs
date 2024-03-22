@@ -4,24 +4,20 @@
     {
         private readonly Mock<IInterviewRepository> _mockRepository;
         private readonly Mock<ILogger<InterviewService>> _mockLogger;
-        private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly InterviewService _service;
 
         public InterviewServiceTests()
         {
             _mockRepository = new Mock<IInterviewRepository>();
             _mockLogger = new Mock<ILogger<InterviewService>>();
-            _mockConfiguration = new Mock<IConfiguration>();
-            _mockConfiguration.Setup(config => config["ApiSettings:ScheduledNumberOfDays"]).Returns("14");
 
-            _service = new InterviewService(_mockRepository.Object, _mockLogger.Object, _mockConfiguration.Object);
+            _service = new InterviewService(_mockRepository.Object, _mockLogger.Object);
         }
 
         private void ResetMocks()
         {
             _mockRepository.Reset();
             _mockLogger.Reset();
-            _mockConfiguration.Reset();
         }
 
         [Fact]
