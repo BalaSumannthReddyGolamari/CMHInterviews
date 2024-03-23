@@ -21,7 +21,7 @@
 
                 var interviews = await _repository.GetInterview(cancellationToken);
 
-                if (interviews == null || !interviews?.Any() == null)
+                if (interviews?.Any() == null)
                 {
                     _logger.LogInformation("No interviews found.");
                     return new ScheduledInterviewCount { NumberOfInterviews = 0 };

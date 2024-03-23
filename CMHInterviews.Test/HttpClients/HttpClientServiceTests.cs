@@ -1,12 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing.Matching;
-using Microsoft.Extensions.Options;
-using Moq.Protected;
-using System.Net.Http;
-using System.Net;
-using System.Text.Json;
-using Moq;
-
-namespace CMHInterviews.Test.HttpClients
+﻿namespace CMHInterviews.Test.HttpClients
 {
     public class HttpClientServiceTests
     {
@@ -45,12 +37,12 @@ namespace CMHInterviews.Test.HttpClients
 
             // use real http client with mocked handler here
             var httpClient = new HttpClient(handlerMock.Object);
-            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+            httpClient.BaseAddress = new Uri("https://example.com");
 
             var service = new HttpClientService(httpClient, _mockLogger.Object);
 
             // ACT
-            var result = await service.GetItems<Interview>("http:www.google.com", CancellationToken.None);
+            var result = await service.GetItems<Interview>("https://example.com/api/getcandidates", CancellationToken.None);
 
             // ASSERT
             handlerMock.Protected().Verify(
@@ -80,7 +72,7 @@ namespace CMHInterviews.Test.HttpClients
 
             // use real http client with mocked handler here
             var httpClient = new HttpClient(handlerMock.Object);
-            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+            httpClient.BaseAddress = new Uri("https://example.com");
 
             var service = new HttpClientService(httpClient, _mockLogger.Object);
 
@@ -111,12 +103,12 @@ namespace CMHInterviews.Test.HttpClients
 
             // use real http client with mocked handler here
             var httpClient = new HttpClient(handlerMock.Object);
-            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+            httpClient.BaseAddress = new Uri("https://example.com");
 
             var service = new HttpClientService(httpClient, _mockLogger.Object);
 
             // ACT
-            var result = await service.GetItems<Interview>("http:www.google.com", CancellationToken.None);
+            var result = await service.GetItems<Interview>("https://example.com/api/getcandidates", CancellationToken.None);
 
             // ASSERT
             handlerMock.Protected().Verify(
@@ -150,12 +142,12 @@ namespace CMHInterviews.Test.HttpClients
 
             // use real http client with mocked handler here
             var httpClient = new HttpClient(handlerMock.Object);
-            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+            httpClient.BaseAddress = new Uri("https://example.com");
 
             var service = new HttpClientService(httpClient, _mockLogger.Object);
 
             // ACT & ASSERT
-            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetItems<Interview>("http:www.google.com", CancellationToken.None));
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetItems<Interview>("https://example.com/api/getcandidates", CancellationToken.None));
         }
 
         private List<Interview> GetSampleInterviews()
