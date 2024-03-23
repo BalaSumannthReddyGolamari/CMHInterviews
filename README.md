@@ -1,8 +1,8 @@
-# CMHInterviews
+# CMH Interviews
 
 ## Introduction
 
-Welcome to the CMHInterviews This repository contains the source code for a .NET application built with ASP.NET Core 6.0. The application provides an API endpoint designed to retrieve the total number of interviews scheduled on a specific date within the next 14 days.
+Welcome to the CMHInterviews. This repository contains the source code for a .NET application built with ASP.NET Core 6.0. The application provides an API endpoint designed to retrieve the total number of interviews scheduled on a specific date within the next 14 days.
 
 ## Architecture Overview
 
@@ -37,4 +37,4 @@ The solution includes a Dockerfile to containerize the application. The Dockerfi
 ## Testing
 The solution includes unit tests implemented with xUnit.net. Test cases cover various scenarios, including successful retrieval of interview data, handling of null dates, and error conditions. The tests ensure that the application behaves as expected under different circumstances and that errors are appropriately handled.
 
-Feel free to explore the source code and documentation to learn more about how the application works and how to run it locally or in a containerized environment. If you have any questions or feedback, please don't hesitate to reach out to the project maintainers.
+Feel free to explore the source code and documentation to learn more about how the application works and how to run it locally or in a containerized environment.
