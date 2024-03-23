@@ -1,7 +1,3 @@
-using CMHInterview.Repositories;
-using CMHInterview.Services;
-using CMHInterviews.HttpClients;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

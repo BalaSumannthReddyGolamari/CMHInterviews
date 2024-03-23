@@ -1,59 +1,169 @@
-﻿namespace CMHInterviews.Test.HttpClients
+﻿using Microsoft.AspNetCore.Routing.Matching;
+using Microsoft.Extensions.Options;
+using Moq.Protected;
+using System.Net.Http;
+using System.Net;
+using System.Text.Json;
+using Moq;
+
+namespace CMHInterviews.Test.HttpClients
 {
     public class HttpClientServiceTests
     {
-        private readonly Mock<HttpClient> _mockHttpClient;
         private readonly Mock<ILogger<HttpClientService>> _mockLogger;
-        private readonly HttpClientService _httpClientService;
 
         public HttpClientServiceTests()
         {
-            _mockHttpClient = new Mock<HttpClient>();
             _mockLogger = new Mock<ILogger<HttpClientService>>();
-            _httpClientService = new HttpClientService(_mockHttpClient.Object, _mockLogger.Object);
         }
 
-        //[Fact]
-        //public async Task GetItems_SuccessfulResponse_ReturnsDeserializedData()
-        //{
-        //    // Arrange
-        //     var apiUrl = "https://example.com/api/getitems";
-        //    var expectedResponse = new List<string> { "item1", "item2", "item3" };
+        private void ResetMocks()
+        {
+            _mockLogger.Reset();
+        }
 
-        //    // Set up the HTTP client to return a successful response
-        //    var handlerMock = new Mock<HttpMessageHandler>();
+        [Fact]
+        public async Task GetAsync_ShouldPass()
+        {
+            ResetMocks();
+            // ARRANGE
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                // prepare the expected response of the mocked http call
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent(JsonSerializer.Serialize(GetSampleInterviews())) // mock response
+                })
+                .Verifiable();
 
-        //    var serializedResponse = JsonSerializer.Serialize(expectedResponse);
-        //    var responseContent = new StringContent(serializedResponse, Encoding.UTF8, "application/json");
+            // use real http client with mocked handler here
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri("http://192.92.36.32");
 
-        //    var response = new HttpResponseMessage
-        //    {
-        //        StatusCode = HttpStatusCode.OK,
-        //        Content = responseContent
-        //    };
+            var service = new HttpClientService(httpClient, _mockLogger.Object);
 
-        //    handlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(),
-        //        ItExpr.IsAny<CancellationToken>()).ReturnsAsync(response);
+            // ACT
+            var result = await service.GetItems<Interview>("http:www.google.com", CancellationToken.None);
 
-        //    var httpClient = new HttpClient(handlerMock.Object)
-        //    {
-        //        BaseAddress = new Uri(apiUrl)
-        //    };
+            // ASSERT
+            handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
+                ItExpr.IsAny<CancellationToken>()
+            );
+            Assert.IsAssignableFrom<List<Interview>>(result);
+        }
 
-        //    // Act
-        //    var result = await _httpClientService.GetItems<string>(apiUrl, CancellationToken.None);
+        [Fact]
+        public async Task GetAsync_ShouldThrowException_WhenURLIsNull()
+        {
+            ResetMocks();
+            // ARRANGE
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ThrowsAsync(new Exception("URL is null"))
+                .Verifiable();
 
-        //    // Assert
-        //    Assert.Equal(expectedResponse, result);
-        //    _mockLogger.Verify(
-        //        l => l.LogInformation($"Fetching interviews from {apiUrl}"),
-        //        Times.Once);
-        //    _mockLogger.Verify(
-        //        l => l.LogInformation("Interviews successfully retrieved."),
-        //        Times.Once);
-        //}
+            // use real http client with mocked handler here
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri("http://192.92.36.32");
 
+            var service = new HttpClientService(httpClient, _mockLogger.Object);
+
+            // ACT & ASSERT
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.GetItems<Interview>("", CancellationToken.None));
+        }
+
+        [Fact]
+        public async Task GetAsync_ShouldPass_WhenNoDaataFound()
+        {
+            ResetMocks();
+            // ARRANGE
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                // prepare the expected response of the mocked http call
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    Content = new StringContent(JsonSerializer.Serialize(new List<Interview>())) // mock response
+                })
+                .Verifiable();
+
+            // use real http client with mocked handler here
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+
+            var service = new HttpClientService(httpClient, _mockLogger.Object);
+
+            // ACT
+            var result = await service.GetItems<Interview>("http:www.google.com", CancellationToken.None);
+
+            // ASSERT
+            handlerMock.Protected().Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => req.Method == HttpMethod.Get),
+                ItExpr.IsAny<CancellationToken>()
+            );
+            Assert.IsAssignableFrom<List<Interview>>(result);
+        }
+
+        [Fact]
+        public async Task GetAsync_ShouldThrowHttpException_WhenURLIsNull()
+        {
+            ResetMocks();
+            // ARRANGE
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Content = new StringContent(JsonSerializer.Serialize(new List<Interview>())) // mock response
+                })
+                .Verifiable();
+
+            // use real http client with mocked handler here
+            var httpClient = new HttpClient(handlerMock.Object);
+            httpClient.BaseAddress = new Uri("http://192.92.36.32");
+
+            var service = new HttpClientService(httpClient, _mockLogger.Object);
+
+            // ACT & ASSERT
+            await Assert.ThrowsAsync<HttpRequestException>(async () => await service.GetItems<Interview>("http:www.google.com", CancellationToken.None));
+        }
+
+        private List<Interview> GetSampleInterviews()
+        {
+            return new List<Interview>
+            {
+                new Interview() {Name = "Joey", DateOfInterview = DateTime.Now}
+            };
+        }
     }
-
-
 }

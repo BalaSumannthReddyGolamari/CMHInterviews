@@ -25,8 +25,8 @@
         {
             ResetMocks();
             // Arrange
-            var date = DateTime.Now;
-            var expectedNumberOfInterviews = 1;
+            var date = DateTime.Now.AddDays(2);
+            var expectedNumberOfInterviews = 2;
 
             _mockRepository.Setup(repo => repo.GetInterview(CancellationToken.None))
                 .ReturnsAsync(GetSampleInterviews());
@@ -81,10 +81,18 @@
         // Helper method to generate sample interview data
         private List<Interview> GetSampleInterviews()
         {
+            var currentDate = DateTime.Now.Date;
             return new List<Interview>
-            {
-                new Interview() {Name = "Joey", DateOfInterview = DateTime.Now}
-            };
+                {
+                    new Interview() {Name = "Joey", DateOfInterview = currentDate},
+                    new Interview() {Name = "Chandler", DateOfInterview = currentDate.AddDays(1)},
+                    new Interview() {Name = "Monica", DateOfInterview = currentDate.AddDays(2)},
+                    new Interview() {Name = "Rachel", DateOfInterview = currentDate.AddDays(2)},
+                    new Interview() {Name = "Ross", DateOfInterview = currentDate.AddDays(3)},
+                    new Interview() {Name = "Phoebe", DateOfInterview = currentDate.AddDays(3)},
+                    new Interview() {Name = "Janice", DateOfInterview = currentDate.AddDays(3)}
+                };
         }
+
     }
 }

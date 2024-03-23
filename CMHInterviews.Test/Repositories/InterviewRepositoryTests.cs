@@ -12,7 +12,6 @@
             _mockService = new Mock<IHttpClientService>();
             _mockLogger = new Mock<ILogger<InterviewRepository>>();
             _mockConfiguration = new Mock<IConfiguration>();
-
             _mockConfiguration.Setup(config => config["ApiSettings:ApiUrl"]).Returns("https://example.com/api/getcandidates");
 
             _repository = new InterviewRepository(_mockService.Object, _mockLogger.Object, _mockConfiguration.Object);
