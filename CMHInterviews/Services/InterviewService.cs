@@ -27,8 +27,17 @@
                     return new ScheduledInterviewCount { NumberOfInterviews = 0 };
                 }
 
+                var maxDate = interviews?.Max(i => i.DateOfInterview)?.Date;
+
+                var minDate = interviews?.Min(i => i.DateOfInterview)?.Date;
+
+                if (date?.Date < minDate || date?.Date > maxDate)
+                {
+                    return new ScheduledInterviewCount { NumberOfInterviews = 0 };
+                }
+
                 var interviewsForGivenDate = interviews?
-                    .Where(interview => interview.DateOfInterview?.Date == date.Value.Date);
+                    .Where(interview => interview.DateOfInterview?.Date == date?.Date);
 
                 int numberOfInterviews = interviewsForGivenDate?.Count() ?? 0;
 
