@@ -14,7 +14,7 @@
         }
 
         [HttpPost]
-        public async Task<ActionResult<ScheduledInterviewCount>> CheckInterviews(InterviewDate date, CancellationToken cancellationToken)
+        public async Task<IActionResult> CheckInterviews([FromBody] InterviewDate date, CancellationToken cancellationToken)
         {
             try
             {

@@ -32,7 +32,7 @@
             var result = await _controller.CheckInterviews(date, CancellationToken.None);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsAssignableFrom<ScheduledInterviewCount>(okResult.Value);
             Assert.Equal(5, model.NumberOfInterviews);
         }
@@ -50,7 +50,7 @@
             var result = await _controller.CheckInterviews(date, CancellationToken.None);
 
             // Assert
-            var objectResult = Assert.IsType<ObjectResult>(result.Result);
+            var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
         }
 
@@ -66,7 +66,7 @@
             var result = await _controller.CheckInterviews(date, CancellationToken.None);
 
             // Assert
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             Assert.Equal("Interview date is null.", badRequestResult.Value);
         }
     }
