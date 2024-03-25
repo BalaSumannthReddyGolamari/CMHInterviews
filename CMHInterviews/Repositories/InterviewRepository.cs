@@ -17,12 +17,12 @@
         {
             try
             {
-                var a = await _httpClientService.GetItems<Interview>(_apiUrl, cancellationToken);
-                return a.ToList();
+                var interviews = await _httpClientService.GetItems<Interview>(_apiUrl, cancellationToken);
+                return interviews.ToList();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while getting interviews.");
+                _logger.LogError(ex, "Error occurred while fetching interviews.");
                 throw;
             }
         }
